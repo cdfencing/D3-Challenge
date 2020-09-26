@@ -1,27 +1,45 @@
-// svg container
-var svgHeight = 600;
-var svgWidth = 800;
+// When the browser window is resized, makeResponsive() is called.
+d3.select(window).on("resize", makeResponsive);
 
-// create margins
+// When the browser loads, makeResponsive() is called.
+makeResponsive();
+
+// The code for the chart is wrapped inside a function that
+// automatically resizes the chart
+function makeResponsive() {
+
+    // if the SVG area isn't empty when the browser loads,
+    // remove it and replace it with a resized version of the chart
+    var svgArea = d3.select("body").select("svg");
+
+    // clear svg is not empty
+    if (!svgArea.empty()) {
+        svgArea.remove();
+    }
+
+
+// svg container
+var svgWidth = 960;
+var svgHeight = 500;
+
 var margin = {
-  top: 50,
-  right: 50,
-  bottom: 125,
-  left: 125
+    top: 40,
+    right: 40,
+    bottom: 80,
+    left: 100
 };
 
 // chart area minus the margins
-var chartHeight = svgHeight - margin.top - margin.bottom;
-var chartWidth = svgWidth - margin.left - margin.right;
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
 
-// create the svg container
-var svg = d3.select("#scatter").append("svg")
-  .attr("height", svgHeight)
-  .attr("width", svgWidth);
-
+// make the svg wrapper, append an svg group that will hold the chart
 // shift everything over
-var chartGroup = svg.append("g")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
+var svg = d3
+    .select("#scatter")
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
 
 
 // Import Data
