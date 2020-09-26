@@ -1,22 +1,20 @@
-// When the browser window is resized, makeResponsive() is called.
+// When the browser window is resized and when the browser loads, 
+// makeResponsive() is called
 d3.select(window).on("resize", makeResponsive);
-
-// When the browser loads, makeResponsive() is called.
 makeResponsive();
 
 // The code for the chart is wrapped inside a function that
 // automatically resizes the chart
 function makeResponsive() {
 
-    // if the SVG area isn't empty when the browser loads,
-    // remove it and replace it with a resized version of the chart
+    // if the svg area is not empty when the browser loads,
+    // clear it and replace it with a resized version of the chart
     var svgArea = d3.select("body").select("svg");
 
-    // clear svg is not empty
+    // clear svg if it is not empty
     if (!svgArea.empty()) {
         svgArea.remove();
     }
-
 
     // svg container
     var svgWidth = 960;
@@ -46,15 +44,15 @@ function makeResponsive() {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Initial parameters, choosing poverty and healthcare for this plot
-    var chosenXAxis = "poverty";
-    var chosenYAxis = "healthcare";
+    var XAxis = "poverty";
+    var YAxis = "healthcare";
 
     // function to update x-scale var when there is a click on axis label
-    function xScale(demoData, chosenXAxis) {
+    function xScale(demoData, XAxis) {
         // create scales
         var xLinearScale = d3.scaleLinear()
-            .domain([d3.min(demoData, d => d[chosenXAxis]) * 0.8,
-            d3.max(demoData, d => d[chosenXAxis]) * 1.2
+            .domain([d3.min(demoData, d => d[XAxis]) * 0.8,
+            d3.max(demoData, d => d[XAxis]) * 1.2
             ])
             .range([0, width]);
 
@@ -62,11 +60,11 @@ function makeResponsive() {
     }
 
     // function used for updating y-scale var upon click on axis label
-    function yScale(demoData, chosenYAxis) {
+    function yScale(demoData, YAxis) {
         // create scales
         var yLinearScale = d3.scaleLinear()
-            .domain([d3.min(demoData, d => d[chosenYAxis]) * 0.8,
-            d3.max(demoData, d => d[chosenYAxis]) * 1.2
+            .domain([d3.min(demoData, d => d[YAxis]) * 0.8,
+            d3.max(demoData, d => d[YAxis]) * 1.2
             ])
             .range([height, 0]);
 
@@ -96,40 +94,40 @@ function makeResponsive() {
     }
 
     // function for updating circles group when clicking on new axis
-    function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
+    function renderCircles(circlesGroup, newXScale, newYScale, XAxis, YAxis) {
         circlesGroup.transition()
             .duration(1000)
-            .attr("cx", d => newXScale(d[chosenXAxis]))
-            .attr("cy", d => newYScale(d[chosenYAxis]));
+            .attr("cx", d => newXScale(d[XAxis]))
+            .attr("cy", d => newYScale(d[YAxis]));
         return circlesGroup;
     }
 
     // function used for updating the text in circles group when clicking on new axis
-    function renderText(textGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
+    function renderText(textGroup, newXScale, newYScale, XAxis, YAxis) {
         textGroup.transition()
             .duration(1000)
-            .attr("x", d => newXScale(d[chosenXAxis]))
-            .attr("y", d => newYScale(d[chosenYAxis])+6);
+            .attr("x", d => newXScale(d[XAxis]))
+            .attr("y", d => newYScale(d[YAxis])+6);
         return textGroup;
     }
 
     // function to update circles group with new tooltip
-    function updateToolTip(chosenXAxis, chosenYAxis, textGroup) {
+    function updateToolTip(XAxis, YAxis, textGroup) {
 
-        if (chosenXAxis === "poverty") {
+        if (XAxis === "poverty") {
             var xlabel = "In Poverty:";
         }
-        else if (chosenXAxis === "age") {
+        else if (XAxis === "age") {
             var xlabel = "Median Age:";
         }
         else {
             var xlabel = "Median Income:";
         }
 
-        if (chosenYAxis === "healthcare") {
+        if (YAxis === "healthcare") {
             var ylabel = "Lack Healthcare:";
         }
-        else if (chosenYAxis === "smokes") {
+        else if (YAxis === "smokes") {
             var ylabel = "Smoke";
         }
         else {
@@ -140,7 +138,7 @@ function makeResponsive() {
             .attr("class", "d3-tip")
             .offset([-8, 0])
             .html(function(d) {
-            return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}<br>${ylabel} ${d[chosenYAxis]}%`);
+            return (`${d.state}<br>${xlabel} ${d[XAxis]}<br>${ylabel} ${d[YAxis]}%`);
             });
 
         textGroup.call(toolTip);
@@ -177,8 +175,8 @@ function makeResponsive() {
         });
 
         // create the scale functions
-        var xLinearScale = xScale(demoData, chosenXAxis);
-        var yLinearScale = yScale(demoData, chosenYAxis);
+        var xLinearScale = xScale(demoData, XAxis);
+        var yLinearScale = yScale(demoData, YAxis);
 
         // create the axis functions
         var bottomAxis = d3.axisBottom(xLinearScale);
@@ -199,8 +197,8 @@ function makeResponsive() {
             .data(demoData)
             .enter()
             .append("circle")
-            .attr("cx", d => xLinearScale(d[chosenXAxis]))
-            .attr("cy", d => yLinearScale(d[chosenYAxis]))
+            .attr("cx", d => xLinearScale(d[XAxis]))
+            .attr("cy", d => yLinearScale(d[YAxis]))
             .attr("r", "15")
             .attr("fill", "skyblue")
             .attr("opacity", ".75");
@@ -212,8 +210,8 @@ function makeResponsive() {
             .attr("class", "label")
             .attr("text-anchor", "middle")
             .text(function(d) {return d.abbr;})
-            .attr("x", d => xLinearScale(d[chosenXAxis]))
-            .attr("y", d => yLinearScale(d[chosenYAxis])+6)
+            .attr("x", d => xLinearScale(d[XAxis]))
+            .attr("y", d => yLinearScale(d[YAxis])+6)
             .attr("fill", "white")
             .attr("font-family","sans-serif");
 
@@ -275,30 +273,30 @@ function makeResponsive() {
             .text("Household Income (Median)");
 
         // updateToolTip function above csv import
-        var textGroup = updateToolTip(chosenXAxis, chosenYAxis, textGroup);
+        var textGroup = updateToolTip(XAxis, YAxis, textGroup);
 
         // x axis labels event listener
         xlabelsGroup.selectAll("text")
             .on("click", function() {
             
             var xvalue = d3.select(this).attr("value");
-            if (xvalue !== chosenXAxis) {
+            if (xvalue !== XAxis) {
 
             // updates
-            chosenXAxis = xvalue;
+            XAxis = xvalue;
 
-            xLinearScale = xScale(demoData, chosenXAxis);
+            xLinearScale = xScale(demoData, XAxis);
 
             xAxis = renderXAxis(xLinearScale, xAxis);
 
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, XAxis, YAxis);
 
-            textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            textGroup = renderText(textGroup, xLinearScale, yLinearScale, XAxis, YAxis);
 
-            textGroup = updateToolTip(chosenXAxis, chosenYAxis, textGroup);
+            textGroup = updateToolTip(XAxis, YAxis, textGroup);
 
             // if statement, changes classes to change bold text
-            if (chosenXAxis === "poverty") {
+            if (XAxis === "poverty") {
                 povertyLabel
                     .classed("active", true)
                     .classed("inactive", false);
@@ -310,7 +308,7 @@ function makeResponsive() {
                     .classed("inactive", true);
             
             }
-            else if (chosenXAxis === "age") {
+            else if (XAxis === "age") {
                 povertyLabel
                     .classed("active", false)
                     .classed("inactive", true);
@@ -340,23 +338,23 @@ function makeResponsive() {
             .on("click", function() {
             // get value of selection
             var yvalue = d3.select(this).attr("value");
-            if (yvalue !== chosenYAxis) {
+            if (yvalue !== YAxis) {
 
             // updates like above but for y axis
-            chosenYAxis = yvalue;
+            YAxis = yvalue;
 
-            yLinearScale = yScale(demoData, chosenYAxis);
+            yLinearScale = yScale(demoData, YAxis);
 
             yAxis = renderYAxis(yLinearScale, yAxis);
 
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, XAxis, YAxis);
 
-            textGroup = renderText(textGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+            textGroup = renderText(textGroup, xLinearScale, yLinearScale, XAxis, YAxis);
 
-            text = updateToolTip(chosenXAxis, chosenYAxis, textGroup);
+            text = updateToolTip(XAxis, YAxis, textGroup);
 
             // changes classes to change bold text
-            if (chosenYAxis === "obesity") {
+            if (YAxis === "obesity") {
                 obesityLabel
                     .classed("active", true)
                     .classed("inactive", false);
@@ -368,7 +366,7 @@ function makeResponsive() {
                     .classed("inactive", true);
             
             }
-            else if (chosenYAxis === "smokes") {
+            else if (YAxis === "smokes") {
                 obesityLabel
                     .classed("active", false)
                     .classed("inactive", true);
