@@ -200,7 +200,7 @@ function makeResponsive() {
             .attr("cx", d => xLinearScale(d[XAxis]))
             .attr("cy", d => yLinearScale(d[YAxis]))
             .attr("r", "15")
-            .attr("fill", "skyblue")
+            .attr("fill", "blue")
             .attr("opacity", ".75");
 
         var textGroup = chartGroup.selectAll(".label")
@@ -229,7 +229,7 @@ function makeResponsive() {
             .attr("value", "obesity")
             .classed("inactive", true)
             .attr("dy", "1em")
-            .text("Obese (%)");
+            .text("Obesity (%)");
 
         var smokesLabel = ylabelsGroup.append("text")
             .attr("y", 20 - margin.left)
@@ -237,7 +237,7 @@ function makeResponsive() {
             .attr("value", "smokes")
             .classed("inactive", true)
             .attr("dy", "1em")
-            .text("Smokes (%)");
+            .text("Smoking (%)");
 
         var healthcareLabel = ylabelsGroup.append("text")
             .attr("y", 40 - margin.left)
@@ -256,7 +256,7 @@ function makeResponsive() {
             .attr("y", 20)
             .attr("value", "poverty")
             .classed("active", true)
-            .text("In Poverty (%)");
+            .text("Lives In Poverty (%)");
 
         var ageLabel = xlabelsGroup.append("text")
             .attr("x", 0)
